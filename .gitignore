@@ -1,0 +1,24 @@
+# Node.js
+node_modules/
+
+# Dependencias de producción y desarrollo
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Archivos de entorno (NO subas .env a GitHub, es sensible)
+.env
+
+# Archivos de configuración del IDE (si usas Visual Studio Code o cualquier editor)
+.vscode/
+
+# Archivos generados por el sistema operativo
+.DS_Store       # macOS
+Thumbs.db       # Windows
+
+# Archivos de logs
+*.log
+
+# Archivos temporales generados por el sistema
+*.swp
+*.swo
