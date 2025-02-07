@@ -79,6 +79,7 @@ const logInUser = (req, res) => {
             name: user.name,
             email: user.email,
             avatar: user.avatar,
+            password: user.password,
           },
         });
       } else {
