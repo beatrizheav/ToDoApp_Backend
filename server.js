@@ -12,6 +12,7 @@ app.use(express.json());
 // Routes
 app.get("/users", userController.getAllUsers);
 app.post("/users", userController.createUser);
+app.post("/users", userController.logInUser);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
