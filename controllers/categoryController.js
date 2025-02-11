@@ -12,4 +12,31 @@ const getAllCategories = (req, res) => {
   });
 };
 
-module.exports = { getAllCategories };
+const getUserCategories = (req, res) => {
+  const { user } = req.query;
+
+  if (!user) {
+    return res.status(400).json({ error: "User ID are required" });
+  }
+
+  db.query(
+    "SELECT * FROM categories WHERE user_id = ?",
+    [user],
+    (err, results) => {
+      if (err) {
+        console.error("Database query error: ", err);
+        return res
+          .status(500)
+          .json({ error: "Error retrieving categories from database" });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({
+          message: "Invalid user",
+        });
+      }
+      res.json(results);
+    }
+  );
+};
+
+module.exports = { getAllCategories, getUserCategories };

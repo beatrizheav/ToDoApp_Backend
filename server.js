@@ -23,6 +23,7 @@ app.post("/tasks/createTask", taskController.createTask);
 
 //Routes Categories
 app.get("/categories", categoryController.getAllCategories);
+app.get("/categories/userCategories", categoryController.getUserCategories);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

@@ -70,7 +70,7 @@ const createTask = (req, res) => {
         name,
         category_id,
         description,
-        status, // Always "to do"
+        status,
         due_date,
         priority,
       });
