@@ -12,6 +12,43 @@ const getAllUsers = (req, res) => {
   });
 };
 
+// const createUser = (req, res) => {
+//   const { name, email, password, avatar } = req.body;
+
+//   if (!name || !email || !password || !avatar) {
+//     return res
+//       .status(400)
+//       .json({ message: "Name, email, and password are required" });
+//   }
+
+//   db.execute("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).json({ message: "Internal server error" });
+//     }
+
+//     if (results.length > 0) {
+//       return res.status(400).json({ message: "Email already in use" });
+//     }
+
+//     db.execute(
+//       "INSERT INTO users (name, email, password, avatar) VALUES (?, ?, ?, ?)",
+//       [name, email, password, avatar],
+//       (err, results) => {
+//         if (err) {
+//           console.error(err);
+//           return res.status(500).json({ message: "Failed to create user" });
+//         }
+//         res.status(201).json({
+//           id: results.insertId,
+//           name,
+//           email,
+//         });
+//       }
+//     );
+//   });
+// };
+
 const createUser = (req, res) => {
   const { name, email, password, avatar } = req.body;
 
@@ -31,6 +68,7 @@ const createUser = (req, res) => {
       return res.status(400).json({ message: "Email already in use" });
     }
 
+    // Insert the new user into the 'users' table
     db.execute(
       "INSERT INTO users (name, email, password, avatar) VALUES (?, ?, ?, ?)",
       [name, email, password, avatar],
@@ -39,11 +77,36 @@ const createUser = (req, res) => {
           console.error(err);
           return res.status(500).json({ message: "Failed to create user" });
         }
-        res.status(201).json({
-          id: results.insertId,
-          name,
-          email,
-        });
+
+        const userId = results.insertId; // Get the newly inserted user's ID
+
+        // Insert 3 categories for the newly created user
+        const categories = [
+          ["Home", userId],
+          ["Work", userId],
+          ["Personal", userId],
+        ];
+
+        db.execute(
+          "INSERT INTO categories (name, user_id) VALUES (?, ?), (?, ?), (?, ?)",
+          categories.flat(),
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              return res
+                .status(500)
+                .json({ message: "Failed to create categories" });
+            }
+
+            // Return the response with user data
+            res.status(201).json({
+              id: userId,
+              name,
+              email,
+              message: "User created successfully, and categories added",
+            });
+          }
+        );
       }
     );
   });
