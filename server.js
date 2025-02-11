@@ -18,6 +18,7 @@ app.get("/users/auth", userController.logInUser);
 //Routes Tasks
 app.get("/tasks", taskController.getAllTasks);
 app.get("/tasks/userTasks", taskController.getUserTasks);
+app.post("/tasks/createTask", taskController.createTask);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
