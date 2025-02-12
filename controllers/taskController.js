@@ -78,4 +78,44 @@ const createTask = (req, res) => {
   );
 };
 
-module.exports = { getAllTasks, getUserTasks, createTask };
+// Edit task enpoint
+const editTask = (req, res) => {
+  const { taskId, name, category_id, description, due_date, priority } =
+    req.body;
+
+  if (
+    !taskId ||
+    !name ||
+    !category_id ||
+    !description ||
+    !due_date ||
+    !priority
+  ) {
+    return res.status(400).json({ message: "Data incomplete" });
+  }
+
+  db.query(
+    "UPDATE tasks SET name = ?, category_id = ?, description = ?, due_date = ?, priority = ? WHERE id = ?",
+    [name, category_id, description, due_date, priority, taskId],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Failed to edit task" });
+      }
+
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+      res.status(200).json({
+        id: taskId,
+        name,
+        category_id,
+        description,
+        due_date,
+        priority,
+      });
+    }
+  );
+};
+
+module.exports = { getAllTasks, getUserTasks, createTask, editTask };

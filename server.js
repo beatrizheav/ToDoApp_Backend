@@ -20,6 +20,7 @@ app.get("/users/auth", userController.logInUser);
 app.get("/tasks", taskController.getAllTasks);
 app.get("/tasks/userTasks", taskController.getUserTasks);
 app.post("/tasks/createTask", taskController.createTask);
+app.put("/tasks/editTask", taskController.editTask);
 
 //Routes Categories
 app.get("/categories", categoryController.getAllCategories);
