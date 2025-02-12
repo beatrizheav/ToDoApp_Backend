@@ -39,11 +39,43 @@ const createUser = (req, res) => {
           console.error(err);
           return res.status(500).json({ message: "Failed to create user" });
         }
+<<<<<<< Updated upstream
         res.status(201).json({
           id: results.insertId,
           name,
           email,
         });
+=======
+
+        const userId = results.insertId;
+
+        // Insert 3 categories for the newly created user
+        const categories = [
+          ["Home", userId],
+          ["Work", userId],
+          ["Personal", userId],
+        ];
+
+        db.execute(
+          "INSERT INTO categories (name, user_id) VALUES (?, ?), (?, ?), (?, ?)",
+          categories.flat(),
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              return res
+                .status(500)
+                .json({ message: "Failed to create categories" });
+            }
+
+            res.status(201).json({
+              id: userId,
+              name,
+              email,
+              message: "User created successfully, and categories added",
+            });
+          }
+        );
+>>>>>>> Stashed changes
       }
     );
   });
