@@ -118,13 +118,13 @@ const editTask = (req, res) => {
 };
 
 const deleteTask = (req, res) => {
-  const { taskId } = req.body;
+  const { id } = req.query;
 
-  if (!taskId) {
+  if (!id) {
     return res.status(400).json({ message: "Task ID is required" });
   }
 
-  db.query("DELETE FROM tasks WHERE id = ?", [taskId], (err, results) => {
+  db.query("DELETE FROM tasks WHERE id = ?", [id], (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: "Failed to delete task" });
@@ -134,7 +134,7 @@ const deleteTask = (req, res) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    res.status(200).json({ message: "Task deleted successfully", id: taskId });
+    res.status(200).json({ message: "Task deleted successfully", id: id });
   });
 };
 
