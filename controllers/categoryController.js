@@ -66,7 +66,7 @@ const createCategory = (req, res) => {
   const { user_id, name } = req.body;
 
   if (!user_id || !name) {
-    return res.status(400).json({ message: "Data incomplete" });
+    return res.status(400).json({ message: "Data create incomplete" });
   }
 
   db.execute(
@@ -87,15 +87,16 @@ const createCategory = (req, res) => {
 };
 
 const editCategory = (req, res) => {
-  const { category_id, user_id, name } = req.body;
+  const { id, user_id, name } = req.body;
+  console.error(req.body);
 
-  if (!category_id || !user_id || !name) {
-    return res.status(400).json({ message: "Data incomplete" });
+  if (!id || !user_id || !name) {
+    return res.status(400).json({ message: "Data edit incomplete" });
   }
 
   db.execute(
     "UPDATE categories SET name = ? WHERE id = ? AND user_id = ?",
-    [name, category_id, user_id],
+    [name, id, user_id],
     (err, results) => {
       if (err) {
         console.error(err);
@@ -109,7 +110,7 @@ const editCategory = (req, res) => {
           .json({ message: "Category not found or not authorized" });
       }
       res.status(200).json({
-        category_id,
+        id,
         user_id,
         name,
       });
