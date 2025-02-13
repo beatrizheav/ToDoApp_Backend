@@ -39,4 +39,43 @@ const getUserTasks = (req, res) => {
   );
 };
 
-module.exports = { getAllTasks, getUserTasks };
+const createTask = (req, res) => {
+  const { user_id, name, category_id, description, due_date, priority } =
+    req.body;
+
+  if (
+    !user_id ||
+    !name ||
+    !category_id ||
+    !description ||
+    !due_date ||
+    !priority
+  ) {
+    return res.status(400).json({ message: "Data incomplete" });
+  }
+
+  const status = "to do";
+
+  db.execute(
+    "INSERT INTO tasks (user_id, name, category_id, description, status, due_date, priority) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [user_id, name, category_id, description, status, due_date, priority],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Failed to create task" });
+      }
+      res.status(201).json({
+        id: results.insertId,
+        user_id,
+        name,
+        category_id,
+        description,
+        status,
+        due_date,
+        priority,
+      });
+    }
+  );
+};
+
+module.exports = { getAllTasks, getUserTasks, createTask };

@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const userController = require("./controllers/userController");
 const taskController = require("./controllers/taskController");
+const categoryController = require("./controllers/categoryController");
 
 require("dotenv").config();
 
@@ -18,6 +19,11 @@ app.get("/users/auth", userController.logInUser);
 //Routes Tasks
 app.get("/tasks", taskController.getAllTasks);
 app.get("/tasks/userTasks", taskController.getUserTasks);
+app.post("/tasks/createTask", taskController.createTask);
+
+//Routes Categories
+app.get("/categories", categoryController.getAllCategories);
+app.get("/categories/userCategories", categoryController.getUserCategories);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
