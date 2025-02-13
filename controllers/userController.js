@@ -66,6 +66,8 @@ const createUser = (req, res) => {
               id: userId,
               name,
               email,
+              password,
+              avatar,
               message: "User created successfully, and categories added",
             });
           }
