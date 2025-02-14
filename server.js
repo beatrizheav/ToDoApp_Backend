@@ -29,6 +29,7 @@ app.get("/categories/userCategories", categoryController.getUserCategories);
 app.get("/categories/category", categoryController.getCategory);
 app.post("/categories/createCategory", categoryController.createCategory);
 app.put("/categories/editCategory", categoryController.editCategory);
+app.delete("/categories/deleteCategory", categoryController.deleteCategory);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
