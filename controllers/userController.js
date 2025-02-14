@@ -45,13 +45,14 @@ const createUser = (req, res) => {
 
         // Insert 3 categories for the newly created user
         const categories = [
+          ["No category", userId],
           ["Home", userId],
           ["Work", userId],
           ["Personal", userId],
         ];
 
         db.execute(
-          "INSERT INTO categories (name, user_id) VALUES (?, ?), (?, ?), (?, ?)",
+          "INSERT INTO categories (name, user_id) VALUES (?, ?), (?, ?), (?, ?), (?, ?)",
           categories.flat(),
           (err, results) => {
             if (err) {

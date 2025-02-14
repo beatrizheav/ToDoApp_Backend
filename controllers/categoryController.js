@@ -118,24 +118,72 @@ const editCategory = (req, res) => {
 };
 
 const deleteCategory = (req, res) => {
-  const { id } = req.query;
+  const { id, userId } = req.query;
 
-  if (!id) {
-    return res.status(400).json({ message: "Category ID is required" });
+  if (!id || !userId) {
+    return res
+      .status(400)
+      .json({ message: "Category ID and User ID are required" });
   }
 
-  db.query("DELETE FROM categories WHERE id = ?", [id], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Failed to delete category" });
-    }
+  // Paso 1: Verificar si la categoría "No category" existe para el usuario
+  db.query(
+    "SELECT id FROM categories WHERE name = 'No category' AND user_id = ?",
+    [userId],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ message: "Failed to check for 'No category'" });
+      }
 
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ message: "Category not found" });
-    }
+      if (results.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "'No category' does not exist for this user" });
+      }
 
-    res.status(200).json({ message: "Category deleted successfully", id: id });
-  });
+      const noCategoryId = results[0].id;
+
+      // Paso 2: Actualizar las tareas que están asociadas a la categoría que se va a eliminar
+      db.query(
+        "UPDATE tasks SET category_id = ? WHERE category_id = ? AND user_id = ?",
+        [noCategoryId, id, userId],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ message: "Failed to update tasks" });
+          }
+
+          // Paso 3: Eliminar la categoría
+          db.query(
+            "DELETE FROM categories WHERE id = ? AND user_id = ?",
+            [id, userId],
+            (err, results) => {
+              if (err) {
+                console.error(err);
+                return res
+                  .status(500)
+                  .json({ message: "Failed to delete category" });
+              }
+
+              if (results.affectedRows === 0) {
+                return res
+                  .status(404)
+                  .json({ message: "Category not found for this user" });
+              }
+
+              res.status(200).json({
+                message: "Category deleted and tasks updated successfully",
+                id: id,
+              });
+            }
+          );
+        }
+      );
+    }
+  );
 };
 
 module.exports = {
