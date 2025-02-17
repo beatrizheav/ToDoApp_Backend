@@ -21,6 +21,7 @@ app.get("/tasks", taskController.getAllTasks);
 app.get("/tasks/userTasks", taskController.getUserTasks);
 app.post("/tasks/createTask", taskController.createTask);
 app.put("/tasks/editTask", taskController.editTask);
+app.delete("/tasks/deleteTask", taskController.deleteTask);
 
 //Routes Categories
 app.get("/categories", categoryController.getAllCategories);

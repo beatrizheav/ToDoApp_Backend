@@ -78,7 +78,6 @@ const createTask = (req, res) => {
   );
 };
 
-// Edit task enpoint
 const editTask = (req, res) => {
   const { taskId, name, category_id, description, due_date, priority } =
     req.body;
@@ -118,4 +117,31 @@ const editTask = (req, res) => {
   );
 };
 
-module.exports = { getAllTasks, getUserTasks, createTask, editTask };
+const deleteTask = (req, res) => {
+  const { id } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ message: "Task ID is required" });
+  }
+
+  db.query("DELETE FROM tasks WHERE id = ?", [id], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Failed to delete task" });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json({ message: "Task deleted successfully", id: id });
+  });
+};
+
+module.exports = {
+  getAllTasks,
+  getUserTasks,
+  createTask,
+  editTask,
+  deleteTask,
+};
