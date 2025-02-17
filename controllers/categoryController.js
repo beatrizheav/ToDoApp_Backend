@@ -62,4 +62,33 @@ const getCategory = (req, res) => {
   });
 };
 
-module.exports = { getAllCategories, getUserCategories, getCategory };
+const createCategory = (req, res) => {
+  const { user_id, name } = req.body;
+
+  if (!user_id || !name) {
+    return res.status(400).json({ message: "Data incomplete" });
+  }
+
+  db.execute(
+    "INSERT INTO categories (user_id, name) VALUES (?, ?)",
+    [user_id, name],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Failed to create category" });
+      }
+      res.status(201).json({
+        id: results.insertId,
+        user_id,
+        name,
+      });
+    }
+  );
+};
+
+module.exports = {
+  getAllCategories,
+  getUserCategories,
+  getCategory,
+  createCategory,
+};
