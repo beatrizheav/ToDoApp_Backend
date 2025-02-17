@@ -20,10 +20,12 @@ app.get("/users/auth", userController.logInUser);
 app.get("/tasks", taskController.getAllTasks);
 app.get("/tasks/userTasks", taskController.getUserTasks);
 app.post("/tasks/createTask", taskController.createTask);
+app.put("/tasks/editTask", taskController.editTask);
 
 //Routes Categories
 app.get("/categories", categoryController.getAllCategories);
 app.get("/categories/userCategories", categoryController.getUserCategories);
+app.get("/categories/category", categoryController.getCategory);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
