@@ -88,7 +88,6 @@ const createCategory = (req, res) => {
 
 const editCategory = (req, res) => {
   const { id, user_id, name } = req.body;
-  console.error(req.body);
 
   if (!id || !user_id || !name) {
     return res.status(400).json({ message: "Data edit incomplete" });
@@ -118,10 +117,77 @@ const editCategory = (req, res) => {
   );
 };
 
+const deleteCategory = (req, res) => {
+  const { id, userId } = req.query;
+
+  if (!id || !userId) {
+    return res
+      .status(400)
+      .json({ message: "Category ID and User ID are required" });
+  }
+
+  db.query(
+    "SELECT id FROM categories WHERE name = 'No category' AND user_id = ?",
+    [userId],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ message: "Failed to check for 'No category'" });
+      }
+
+      if (results.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "'No category' does not exist for this user" });
+      }
+
+      const noCategoryId = results[0].id;
+
+      db.query(
+        "UPDATE tasks SET category_id = ? WHERE category_id = ? AND user_id = ?",
+        [noCategoryId, id, userId],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ message: "Failed to update tasks" });
+          }
+
+          db.query(
+            "DELETE FROM categories WHERE id = ? AND user_id = ?",
+            [id, userId],
+            (err, results) => {
+              if (err) {
+                console.error(err);
+                return res
+                  .status(500)
+                  .json({ message: "Failed to delete category" });
+              }
+
+              if (results.affectedRows === 0) {
+                return res
+                  .status(404)
+                  .json({ message: "Category not found for this user" });
+              }
+
+              res.status(200).json({
+                message: "Category deleted and tasks updated successfully",
+                id: id,
+              });
+            }
+          );
+        }
+      );
+    }
+  );
+};
+
 module.exports = {
   getAllCategories,
   getUserCategories,
   getCategory,
   createCategory,
   editCategory,
+  deleteCategory,
 };
