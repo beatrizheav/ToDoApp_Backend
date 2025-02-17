@@ -31,7 +31,6 @@ const createUser = (req, res) => {
       return res.status(400).json({ message: "Email already in use" });
     }
 
-    // Insert the new user into the 'users' table
     db.execute(
       "INSERT INTO users (name, email, password, avatar) VALUES (?, ?, ?, ?)",
       [name, email, password, avatar],
@@ -41,9 +40,8 @@ const createUser = (req, res) => {
           return res.status(500).json({ message: "Failed to create user" });
         }
 
-        const userId = results.insertId; // Get the newly inserted user's ID
+        const userId = results.insertId;
 
-        // Insert 3 categories for the newly created user
         const categories = [
           ["No category", userId],
           ["Home", userId],
@@ -62,7 +60,6 @@ const createUser = (req, res) => {
                 .json({ message: "Failed to create categories" });
             }
 
-            // Return the response with user data
             res.status(201).json({
               id: userId,
               name,

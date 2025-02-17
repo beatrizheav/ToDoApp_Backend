@@ -126,7 +126,6 @@ const deleteCategory = (req, res) => {
       .json({ message: "Category ID and User ID are required" });
   }
 
-  // Paso 1: Verificar si la categoría "No category" existe para el usuario
   db.query(
     "SELECT id FROM categories WHERE name = 'No category' AND user_id = ?",
     [userId],
@@ -146,7 +145,6 @@ const deleteCategory = (req, res) => {
 
       const noCategoryId = results[0].id;
 
-      // Paso 2: Actualizar las tareas que están asociadas a la categoría que se va a eliminar
       db.query(
         "UPDATE tasks SET category_id = ? WHERE category_id = ? AND user_id = ?",
         [noCategoryId, id, userId],
@@ -156,7 +154,6 @@ const deleteCategory = (req, res) => {
             return res.status(500).json({ message: "Failed to update tasks" });
           }
 
-          // Paso 3: Eliminar la categoría
           db.query(
             "DELETE FROM categories WHERE id = ? AND user_id = ?",
             [id, userId],
