@@ -117,6 +117,33 @@ const editTask = (req, res) => {
   );
 };
 
+const editTaskStatus = (req, res) => {
+  const { taskId, status } = req.body;
+
+  if (!taskId || !status) {
+    return res.status(400).json({ message: "Data incomplete" });
+  }
+
+  db.query(
+    "UPDATE tasks SET status = ? WHERE id = ?",
+    [status, taskId],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Failed to edit status" });
+      }
+
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+      res.status(200).json({
+        id: taskId,
+        status,
+      });
+    }
+  );
+};
+
 const deleteTask = (req, res) => {
   const { id } = req.query;
 
@@ -143,5 +170,6 @@ module.exports = {
   getUserTasks,
   createTask,
   editTask,
+  editTaskStatus,
   deleteTask,
 };

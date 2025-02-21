@@ -66,7 +66,6 @@ const createUser = (req, res) => {
               email,
               password,
               avatar,
-              message: "User created successfully, and categories added",
             });
           }
         );
@@ -99,14 +98,11 @@ const logInUser = (req, res) => {
 
       if (user.password === password) {
         res.status(200).json({
-          message: "Login successful",
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            avatar: user.avatar,
-            password: user.password,
-          },
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          avatar: user.avatar,
         });
       } else {
         return res.status(400).json({ message: "Invalid email or password" });
