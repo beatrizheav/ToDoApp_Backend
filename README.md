@@ -71,21 +71,21 @@ Make sure you have the following installed:
    mysql -u root -p
    ```
 
-Execute the SQL queries to create the necessary tables. You can find these queries in the `queries` folder on the createDB.sql file. Run each query in the MySQL terminal:
+7. Execute the SQL queries to create the necessary tables. You can find these queries in the `queries` folder on the createDB.sql file. Run each query in the MySQL terminal:
 
-7. Verify that the tables were created by checking the database schema:
+8. Verify that the tables were created by checking the database schema:
 
    ```sql
    SHOW TABLES;
    ```
 
-8. After setting up the database, you can start the backend server:
+9. After setting up the database, you can start the backend server:
 
    ```bash
    npm run server
    ```
 
-9. The server will start, and you can begin using the backend API at `http://localhost:5001` (or whichever port you configured in the project).
+10. The server will start, and you can begin using the backend API at `http://localhost:5001` (or whichever port you configured in the project).
 
 ## API Endpoints
 
